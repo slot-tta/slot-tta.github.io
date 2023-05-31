@@ -1,0 +1,110 @@
+<html>
+    <head>
+        <title>GFS-Nets</title>
+	    <link rel="stylesheet" type="text/css" href="styles.css" />
+	    <link rel="stylesheet" href="https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css">
+    	<link href="https://fonts.googleapis.com/css?family=Roboto:light,normal" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Oregano" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+    	<script src="https://kit.fontawesome.com/2ff36a40d1.js"></script>
+		<script type="text/javascript" src="../js/modernizr-1.5.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    </head>
+
+	<body>
+		<div id="content">
+			<!-- <h1>DISENTANGLING 3D PROTOTYPICAL NETWORKS FOR FEW-SHOT CONCEPT LEARNING</h1> -->
+			<h1>Generating Fast and Slow: Scene Decomposition via Reconstruction</h1>
+			<div style="text-align: center">
+				<span class="author"><a href="https://mihirp1998.github.io/" target="_blank">Mihir Prabhudesai</a></span>
+				<span class="author"><a href="https://anirudh9119.github.io/" target="_blank">Anirudh Goyal</a></span>
+				<span class="author"><a href="https://www.cs.cmu.edu/~dpathak/" target="_blank">Deepak Pathak</a></span>
+				<span class="author" style="padding-right: 0"><a href="https://www.cs.cmu.edu/~katef/" target="_blank">Katerina Fragkiadaki</a></span>
+
+			</div>
+			<div class="affil">
+				Carnegie Mellon University | Mila, University of Montreal
+			</div>
+			<!-- <div class="venue">ICLR 2021</div> -->
+			<br>
+			<!-- <div class="highlight"><b>1st place on KITTI Scene Flow benchmark</b></div> -->
+
+			<!-- <div style="text-align: center;">
+				<img src="images/improving-det.gif" width=1000><br>
+			</div> -->
+			<!-- <h2>Video Explanation</h2> -->
+			<div style="text-align: center;">
+			<!-- Add youtube video link here -->
+			<iframe width="1000" height="650" src="https://www.youtube.com/embed/vQcoEsUWi6M?autoplay=1&loop=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			</div>
+			<br>
+			<h2>Abstract</h2>
+			<p>
+			We consider the problem of segmenting scenes into constituent entities, i.e. underlying objects and their parts. Current supervised visual detectors though impressive within their training distribution, often fail to segment out-of-distribution scenes into their constituent entities. Recent slot-centric generative models break such dependence on supervision, by attempting to segment scenes into entities unsupervised, by reconstructing pixels. However, they have been restricted thus far to toy scenes as they suffer from a reconstruction-segmentation trade-off: as the entity bottleneck gets wider, reconstruction improves but then the segmentation collapses. We propose GFS-Nets (Generating Fast and Slow Networks) that alleviate this issue with two ingredients: i) curriculum training in the form of primitives, often missing from current generative models and, ii) test-time adaptation per scene through gradient descent on the reconstruction objective, what we call slow inference, missing from current feed-forward detectors. We show the proposed curriculum suffices to break the reconstruction-segmentation trade-off, and slow inference greatly improves segmentation in out-of-distribution scenes. We evaluate GFS-Nets in 3D and 2D scene segmentation benchmarks of PartNet, CLEVR, Room Diverse++, and show large ( 50%) performance improvements against SOTA supervised feed-forward detectors and unsupervised object discovery methods
+
+			</p>
+			<br>
+
+			<h2>Overview of GFS-Nets</h2>
+			<!-- <div style="text-align: center;">
+				<img src="poster.png" width="1000"></img>
+			</div> -->
+	
+			<div style="text-align: center;">
+				<img src="images/Fig1.png" width="800"></img>
+			</div>
+			<br> 
+		Point-cloud and image decompositions with Generative Fast and Slow Networks (GFS-Nets). GFS-Nets parses completely
+		novel scenes into familiar entities via slow inference, i.e., gradient descent on the reconstruction error of the scene under consideration.
+		Left: We train supervised both our model and 3D-DETR, a SOTA pointcloud 3D part detector, to segment 3D parts in pointclouds of
+		the PartNet Chair category and test them on unseen categories of PartNet. Our model outperforms 3D-DETR by 50% in segmentation
+		accuracy using self-supervised slow inference in the test point-clouds. Right: We test GFS-Nets in unsupervised segmentation given a
+		curriculum in training with single object scenes. Our model significantly outperforms the baseline generative models of Slot Attention 
+		and uORF.
+			<br> <br>
+			<div style="text-align: center;">
+				<img src="images/Fig2.png" width="1000"></img>
+			</div>
+			<br>
+			<b>Stages of training in GFS-Nets</b>.. Left: Learning the primitive distribution. First, GFS-Nets is trained to auto encode each
+primitive using few slots (one in the case of 3D part primitives, two in the case of single object images, one for the foreground, and one
+for the background. Right: Learning to de-compose complex scenes. Next, GFS-Nets is applied on complex scenes that are comprised on
+multiple primitives (parts or objects) in complex configurations. We instantiate multiple slots, their number is an upper bound of the number
+of primitives in the dataset. GFS-Nets then autoencodes the scene while binding regions of the input to different slots, and slots that are
+unused are mapped to the empty set. Aside of jointly autoencoding the whole dataset of complex scenes, GFS-Nets further uses gradient
+descent on the reconstruction objective in each indivisual scene—we call it slow inference—to improve the decomposition accuracy
+			
+			<!-- <h2>ICLR 2021 video presentation</h2> -->
+
+			<!-- <div style="text-align: center;"> -->
+			<!-- Add youtube video link here -->
+				<!-- <iframe width="1000" height="650" src="https://www.youtube.com/embed/HKFqR-Pqy4I?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+<!-- 				<iframe width="1000" height="500" src="https://www.youtube.com/embed/smwWIEGmoXI"  frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			</div> -->
+
+			<h2>Citation</h2>
+			<div class="paper">
+				<div class="paper_pic"><img src="images/paper_pic.png" width=190></div>
+				<div class="paper_content">
+					<h3><b>Generating Fast and Slow: Scene Decomposition via Reconstruction</b></h3>
+					<h4><span style="font-weight:normal;">Mihir Prabhudesai, Anirudh Goyal, Deepak Pathak, Katerina Fragkiadaki</span></h3>
+					<!-- <h4>Supplementary <a href="supplementary.pdf" target="_blank"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></a>  |  -->
+					<h4>Arxiv preprint <a href="https://arxiv.org/abs/2203.11194" target="_blank"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></a></h4>
+					<h3>BibTex</h3>
+					<div class="bibtex">
+						<pre>
+@article{prabhudesai2022gfs,
+title={Generating Fast and Slow: Scene Decomposition via Reconstruction},
+author={Prabhudesai, Mihir and Goyal, Anirudh and Pathak, Deepak and Fragkiadaki
+, Katerina},
+journal={arXiv preprint arXiv:2203.11194},
+year={2022}
+}
+					</pre>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>		

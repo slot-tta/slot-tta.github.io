@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>Slot-TTA</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:image" content="images/Fig1.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1296">
+    <meta property="og:image:height" content="840">
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mihirp1998.github.io/project_pages/slottta/" />
+    <meta property="og:title" content="Test-time adaptation with slot-centric models" />
+    <meta property="og:description" content="Current supervised visual detectors, though impressive within their training distribution, often fail to segment out-of-distribution scenes into their constituent entities. Recent test-time adaptation methods use auxiliary self-supervised losses to adapt the network parameters to each test example independently and have shown promising results towards generalization outside the training distribution for the task of image classification. In our work, we find evidence that these losses can be insufficient for instance segmentation tasks, without also considering architectural inductive biases. For image segmentation, recent slot-centric generative models break such dependence on supervision by attempting to segment scenes into entities in a self-supervised manner by reconstructing pixels. Drawing upon these two lines of work, we propose Slot-TTA, a semi-supervised instance segmentation model equipped with a slot-centric inductive bias, that is adapted per scene at test time through gradient descent on reconstruction or novel view synthesis objectives. We show that test-time adaptation in Slot-TTA greatly improves instance segmentation in out-of-distribution scenes. We evaluate Slot-TTA in several 3D and 2D scene instance segmentation benchmarks and show substantial out-of-distribution performance improvements against state-of-the-art supervised feed-forward detectors and self-supervised test-time adaptation methods."
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Test-time adaptation with slot-centric models" />
+    <meta name="twitter:description" content="Current supervised visual detectors, though impressive within their training distribution, often fail to segment out-of-distribution scenes into their constituent entities. Recent test-time adaptation methods use auxiliary self-supervised losses to adapt the network parameters to each test example independently and have shown promising results towards generalization outside the training distribution for the task of image classification. In our work, we find evidence that these losses can be insufficient for instance segmentation tasks, without also considering architectural inductive biases. For image segmentation, recent slot-centric generative models break such dependence on supervision by attempting to segment scenes into entities in a self-supervised manner by reconstructing pixels. Drawing upon these two lines of work, we propose Slot-TTA, a semi-supervised instance segmentation model equipped with a slot-centric inductive bias, that is adapted per scene at test time through gradient descent on reconstruction or novel view synthesis objectives. We show that test-time adaptation in Slot-TTA greatly improves instance segmentation in out-of-distribution scenes. We evaluate Slot-TTA in several 3D and 2D scene instance segmentation benchmarks and show substantial out-of-distribution performance improvements against state-of-the-art supervised feed-forward detectors and self-supervised test-time adaptation methods."
+    />
+    <meta name="twitter:image" content="images/Fig1.png" />
+
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💫</text></svg>">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+    <link rel="stylesheet" href="gfs_css/gfs_app.css">
+
+    <link rel="stylesheet" href="gfs_css/gfs.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+
+    <script src="js/app.js"></script>
+</head>
+
+<body>
+    <div class="container" id="main">
+        <div class="row">
+            <h2 class="col-md-12 text-center">
+                <b>Test-time adaptation with slot-centric models</b>
+                <small>
+                </small>
+            </h2>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <ul class="list-inline">
+                    <li>
+                        <a href="https://mihirp1998.github.io/">
+                          Mihir Prabhudesai
+                        </a>
+                        </br>CMU
+                    </li>
+                    <li>
+                        <a href="https://anirudh9119.github.io/">
+                            Anirudh Goyal
+                        </a>
+                        </br>DeepMind
+                    </li>
+                    <!-- <br> -->
+                    <li>
+                        <a href="https://research.google/people/107637/">
+                          Sujoy Paul
+                        </a>
+                        </br>Google
+                    </li>
+                    <li>
+                        <a href="https://www.sjoerdvansteenkiste.com/">
+                           Sjoerd van Steenkiste
+                        </a>
+                        </br>Google
+                    </li>
+                    <br>
+                    <li>
+                        <a href="https://msajjadi.com/">
+                          Mehdi S. M. Sajjadi
+                        </a>
+                        </br>Google
+                    </li>
+
+                    <li>
+                        <a href="https://research.google/people/GauravAggarwal/">
+                          Gaurav Aggarwal
+                        </a>
+                        </br>Google
+                    </li>
+
+                    <li>
+                        <a href="https://tkipf.github.io/">
+                          Thomas Kipf
+                        </a>
+                        </br>Google
+                    </li>
+
+                    <li>
+                        <a href="https://www.cs.cmu.edu/~dpathak/">
+                          Deepak Pathak
+                        </a>
+                        </br>CMU
+                    </li>
+
+                    <li>
+                        <a href="https://www.cs.cmu.edu/~katef/">
+                          Katerina Fragkiadaki
+                        </a>
+                        </br>CMU
+                    </li>>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4 text-center">
+                <ul class="nav nav-pills nav-justified">
+                    <li>
+                        <a href="https://arxiv.org/abs/2203.11194">
+                            <image src="images/paper_pic.png" height="60px">
+                                <h4><strong>Paper</strong></h4>
+                        </a>
+                    </li>
+<!--                     <li>
+                        <a href="https://www.youtube.com/watch?v=6LdBdg8IWug">
+                            <image src="images/youtube_icon.png" height="60px">
+                                <h4><strong>Video</strong></h4>
+                        </a>
+                    </li> -->
+                    <li>
+                            <a href="https://github.com/mihirp1998/Slot-TTA.git">
+                            <image src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" height="60px">
+                                <h4><strong>Code</strong></h4>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <video id="v0" width="100%" autoplay loop muted controls>
+                  <source src="images/slow_infer_vid.m4v" type="video/mp4" />
+                </video>
+            </div>
+            <div class="col-md-8 col-md-offset-2">
+                <p class="text-center">
+                    <b>Test-time adaptation in Slot-TTA</b>: In the above video we show the iterations in training over the reconstruction objective for a single test example.
+                </p>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Abstract
+                </h3>
+                <p class="text-justify">
+Current supervised visual detectors, though impressive within their training distribution, often fail to segment out-of-distribution scenes into their constituent entities. Recent test-time adaptation methods use auxiliary self-supervised losses to adapt the network parameters to each test example independently and have shown promising results towards generalization outside the training distribution for the task of image classification. In our work, we find evidence that these losses can be insufficient for instance segmentation tasks, without also considering architectural inductive biases. For image segmentation, recent slot-centric generative models break such dependence on supervision by attempting to segment scenes into entities in a self-supervised manner by reconstructing pixels. Drawing upon these two lines of work, we propose Slot-TTA, a semi-supervised instance segmentation model equipped with a slot-centric inductive bias, that is adapted per scene at test time through gradient descent on reconstruction or novel view synthesis objectives. We show that test-time adaptation in Slot-TTA greatly improves instance segmentation in out-of-distribution scenes. We evaluate Slot-TTA in several 3D and 2D scene instance segmentation benchmarks and show substantial out-of-distribution performance improvements against state-of-the-art supervised feed-forward detectors and self-supervised test-time adaptation methods.
+                </p>
+            </div>
+        </div>
+
+
+
+<!--         <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Video
+                </h3>
+                <div class="text-center">
+                    <div style="position:relative;padding-top:56.25%;">
+                        <iframe src="https://www.youtube.com/embed/6LdBdg8IWug" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Citation
+                </h3>
+                <div class="form-group col-md-10 col-md-offset-1">
+                    <textarea id="bibtex" class="form-control" readonly>
+@inproceedings{prabhudesai2022test,
+title={Test-time adaptation with slot-centric models},
+author={Prabhudesai, Mihir and Goyal, Anirudh and Paul, Sujoy and van Steenkiste, Sjoerd and Sajjadi, Mehdi SM and Aggarwal, Gaurav and Kipf, Thomas and Pathak, Deepak and Fragkiadaki, Katerina},
+journal={arXiv preprint arXiv:2203.11194},
+year={2022}
+}                        
+</textarea>
+                </div>
+            </div>
+        </div>
+<!-- 
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                Test-time adaptation with slot-centric models>
+                <p class="text-justify">
+                    Thanks to Ricardo Martin-Brualla and David Salesin for their comments on the text, and to George Drettakis and Georgios Kopanas for graciously assisting us with our baseline evaluation.
+                    <br> The website template was borrowed from <a href="http://mgharbi.com/">Michaël Gharbi</a>.
+                </p>
+            </div>
+        </div> -->
+    </div>
+</body>
+
+</html>
