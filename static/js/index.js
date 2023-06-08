@@ -119,6 +119,11 @@ $(document).ready(function() {
         $("#hand-pointer").css("display", "none")
     });    
 
+    slider.addEventListener("pointerdown", function() {
+        autoMove = false;
+        $("#hand-pointer").css("display", "none")
+    });    
+
     $('#pointslow')[0].playbackRate = 0.7;
 
 
