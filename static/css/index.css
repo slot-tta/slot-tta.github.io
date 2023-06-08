@@ -1,0 +1,235 @@
+:root {
+  /* --link-color: #3273dc; */
+  --link-color: #362FD9;
+  --accent-color: #FF1700;
+}
+
+body {
+  font-family: 'Noto Sans', sans-serif;
+}
+
+
+.footer .icon-link {
+    font-size: 25px;
+    color: #000;
+}
+
+.link-block a {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+
+
+.teaser .hero-body {
+  padding-top: 0;
+  padding-bottom: 3rem;
+}
+
+.teaser {
+  font-family: 'Google Sans', sans-serif;
+}
+
+
+
+
+
+.publication-title {
+}
+
+.publication-header .hero-body {
+}
+
+.publication-title {
+    font-family: 'Google Sans', sans-serif;
+}
+
+.publication-authors {
+    font-family: 'Google Sans', sans-serif;
+}
+
+.publication-venue {
+    color: #555;
+    font-weight: bold;
+}
+
+.publication-awards {
+    color: #ff3860;
+    width: fit-content;
+    font-weight: bolder;
+}
+
+.publication-authors {
+}
+
+.publication-authors a {
+   color: hsl(204, 86%, 53%) !important;
+}
+
+.publication-authors a:hover {
+    text-decoration: underline;
+}
+
+.author-block {
+  display: inline-block;
+  padding: 7px;
+}
+
+.publication-banner img {
+}
+
+.publication-authors {
+  /*color: #4286f4;*/
+}
+
+.publication-video {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+
+    overflow: hidden;
+    border-radius: 10px !important;
+}
+
+.publication-video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+/* method overview */
+
+.method-overview-wrapper>img {
+  /* max-width: 90% !important; */
+}
+
+.method-overview-title {
+  font-weight: 600;
+  font-style: normal;
+  font-size: 1.3rem;
+}
+
+.method-overview {
+  display: none;
+}
+
+.results-carousel {
+  overflow: hidden;
+}
+
+.results-carousel .item {
+  margin: 1px;
+  overflow: hidden;
+  /* border: 1px solid #bbb; */
+  border-radius: 1px;
+  padding: 0;
+  font-size: 0;
+}
+
+.results-carousel video {
+  margin: 0;
+}
+
+
+
+
+.interpolation-image {
+  width: 100%;
+  border-radius: 5px;
+}
+
+
+.slider {
+  margin: 0 !important;
+}
+
+
+
+#interpolation-gt-wrapper img {
+  border-radius: 5px;
+  width: 100%;
+}
+#interpolation-image-wrapper img {
+  border-radius: 5px;
+  width: 100%;
+}
+#interpolation-seg-wrapper img {
+  border-radius: 5px;
+  width: 100%;
+}
+#interpolation-rgbloss-wrapper img {
+  border-radius: 5px;
+  width: 100%;
+}
+#interpolation-segloss-wrapper img {
+  border-radius: 5px;
+  width: 100%;
+}
+
+#hand-pointer {
+  position: absolute;
+  font-size: 24px;
+  animation: slide 2s infinite;
+  top: 37px;
+  opacity: 0.9;
+}
+
+#slider-container {
+  position: relative;
+}
+
+@keyframes slide {
+  0% { left: 0; }
+  50% { left: 250px; }
+  100% { left: 0; }
+}
+
+
+
+
+
+/* bibtex formatting */
+/* https://www.roboleary.net/2022/01/13/copy-code-to-clipboard-blog.html */
+
+pre[class*="language-"] {
+  position: relative;
+  overflow: auto;
+
+  /* make space  */
+  margin: 5px 0;
+  padding: 1.75rem 0 1.75rem 1rem;
+  border-radius: 10px;
+}
+
+pre[class*="language-"] button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.2rem;
+  background-color: white;
+
+  /* border: ridge 2px #7b7b7c; */
+  border: ridge 2px var(--link-color);
+  border-radius: 5px;
+  text-shadow: #c4c4c4 0 0 1px;
+  color: var(--link-color);
+}
+
+pre[class*="language-"] button:hover {
+  cursor: pointer;
+  background-color: var(--link-color);
+  color: white;
+}
+
+#bibtex {
+  margin: 0 auto !important;
+  max-width: 800px !important;
+}
