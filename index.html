@@ -59,8 +59,8 @@
   <script src="./static/js/bulma-slider.min.js"></script> 
 
 
-  <script src="https://cdn.jsdelivr.net/gh/anuraghazra/Verly.js@v1.2.0/dist/verly.bundle.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/anuraghazra/VerlyRangeSlider@v1.0.2/src/VerlyRange.js"></script>
+  
+  
 </head>
 
 <body>
@@ -165,7 +165,7 @@
 
 
       
-      <div class="columns is-vcentered  has-text-centered">
+      <div class="columns mb-0 is-vcentered  has-text-centered">
           <div  id="interpolation-ex3-wrapper">
             <!-- <p class="is-size-5 pb-1">Segmentation Accuracy</p> -->
             <img src="./static/slot_tta_gifs/ex3_frames/frame0001.png"
@@ -179,15 +179,22 @@
           <input class="slider" id="range-slider" type="range" min="1" step="0.01" max="100" value="80">
         </label> -->
       <!-- </section>       -->
-      <div class="columns is-vcentered">
-        <div class="column has-text-centered" id="slider-container">
-          <label>
+      <div class="columns  is-vcentered">
+        <div class="column  pr-0 pl-0 ml-0 mr-0 has-text-centered" id="slider-container">
+          <!-- <label>
           <input class="slider" id="range-slider-poster" type="range" min="1" step="1" max="265" value="0">          
-        </label>
+        </label> -->
+        <input class="is-fullwidth is-large is-info" id="range-slider-poster" name="slider" type="range" value=0>
+              
           <!-- <input class="slider is-fullwidth is-large is-info"
                  id="interpolation-slider"
                  step="1" min="0" max="265" value="0" type="range">     -->
-        </div>          
+        </div>        
+        <!-- <div class="column pr-0 pl-0 ml-0 mr-0">
+          <label for="slider">0</label>
+
+        </div> -->
+        
       </div>
 
       <h2 class="subtitle has-text-centered">

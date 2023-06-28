@@ -44,10 +44,21 @@ $(document).ready(function() {
 			autoplay: false,
 			autoplaySpeed: 3000,
     }
-    VerlyRange("range-slider-poster", "#655ecf80");
+    // VerlyRange("range-slider-poster", "#15ff00");
 
 		// Initialize all div with carousel class
     var carousels = bulmaCarousel.attach('.carousel', options);
+
+    const input = document.querySelector("input");
+    const label = document.querySelector("label");
+    
+    input.addEventListener("input", event => {
+      const value = Number(input.value) / 100;
+      input.style.setProperty("--thumb-rotate", `${value * 720}deg`);
+    //   label.innerHTML = Math.round(value * 50);
+    });
+    
+
 
     // Loop on each carousel initialized
     for(var i = 0; i < carousels.length; i++) {
