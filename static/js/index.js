@@ -1,49 +1,37 @@
 window.HELP_IMPROVE_VIDEOJS = false;
 
-var INTERP_BASE_RGB = "./static/images/stacked_pred_rgb";
-var INTERP_BASE_MASK = "./static/images/stacked_pred_mask";
-var INTERP_BASE_RGB_LOSS = "./static/images/stacked_recon_loss";
-var INTERP_BASE_SEG_ACC = "./static/images/stacked_seg_acc";
-var NUM_INTERP_FRAMES = 319;
+var INTERP_EX1 = "./static/slot_tta_gifs/ex1_frames";
+var INTERP_EX2 = "./static/slot_tta_gifs/ex2_frames";
+var INTERP_EX4 = "./static/slot_tta_gifs/ex4_frames";
+var INTERP_EX5 = "./static/slot_tta_gifs/ex5_frames";
+var INTERP_EX6 = "./static/slot_tta_gifs/ex6_frames";
+var INTERP_EX7 = "./static/slot_tta_gifs/ex7_frames";
+var INTERP_EX3 = "./static/slot_tta_gifs/ex3_frames";
+var NUM_INTERP_FRAMES = 264;
+var NUM_INTERP_FRAMES_PC = 130;
 
-var interp_images_rgb = [];
-var interp_images_mask = [];
-var interp_images_rgb_loss = [];
-var interp_images_mask_acc = [];
+var interp_images_ex1 = [];
+var interp_images_ex2 = [];
+var interp_images_ex3 = [];
+var interp_images_ex4 = [];
+var interp_images_ex5 = [];
+var interp_images_ex6 = [];
+var interp_images_ex7 = [];
 
 function preloadInterpolationImages() {
-  for (var i = 0; i < NUM_INTERP_FRAMES; i++) {
-    var path = INTERP_BASE_RGB + '/' + String(i).padStart(6, '0') + '.jpg';
-    interp_images_rgb[i] = new Image();
-    interp_images_rgb[i].src = path;
+  for (var i = 1; i < NUM_INTERP_FRAMES; i++) {
 
-    var path = INTERP_BASE_MASK + '/' + String(i).padStart(6, '0') + '.jpg';
-    interp_images_mask[i] = new Image();
-    interp_images_mask[i].src = path;    
 
-    var path = INTERP_BASE_RGB_LOSS + '/' + String(i).padStart(6, '0') + '.jpg';
-    interp_images_rgb_loss[i] = new Image();
-    interp_images_rgb_loss[i].src = path;    
-    
-    var path = INTERP_BASE_SEG_ACC + '/' + String(i).padStart(6, '0') + '.jpg';
-    interp_images_mask_acc[i] = new Image();
-    interp_images_mask_acc[i].src = path;        
-  }
-}
+    var path = INTERP_EX3 + '/frame' + String(i).padStart(4, '0') + '.png';
+    interp_images_ex3[i] = new Image();
+    interp_images_ex3[i].src = path;        
 
-function setInterpolationImage(i) {
-  var image = interp_images_rgb[i];
-  var mask = interp_images_mask[i];
-  var rgb_loss = interp_images_rgb_loss[i];
-  var mask_acc = interp_images_mask_acc[i];
-  
-  image.ondragstart = function() { return false; };
-  image.oncontextmenu = function() { return false; };
-  $('#interpolation-image-wrapper')[0].children[1].src = image.src;
-  // $('#interpolation-image-wrapper').empty().append(image);
-  $('#interpolation-seg-wrapper')[0].children[1].src = mask.src;
-  $('#interpolation-rgbloss-wrapper')[0].children[1].src = rgb_loss.src;
-  $('#interpolation-segloss-wrapper')[0].children[1].src = mask_acc.src;  
+}}
+
+
+function setEx3(i) {
+    var ex3 = interp_images_ex3[i];
+    $('#interpolation-ex3-wrapper')[0].children[0].src = ex3.src
 }
 
 
@@ -56,6 +44,7 @@ $(document).ready(function() {
 			autoplay: false,
 			autoplaySpeed: 3000,
     }
+    VerlyRange("range-slider-poster", "#655ecf80");
 
 		// Initialize all div with carousel class
     var carousels = bulmaCarousel.attach('.carousel', options);
@@ -79,52 +68,53 @@ $(document).ready(function() {
 
     preloadInterpolationImages();
 
-    $('#interpolation-slider').on('input', function(event) {
-      setInterpolationImage(this.value);
+    $('#range-slider-poster').on('input', function(event) {
+      setEx3(this.value);
     });
-    setInterpolationImage(0);
-    $('#interpolation-slider').prop('max', NUM_INTERP_FRAMES - 1);
+    setEx3(1);
+    $('#range-slider-poster').prop('max', NUM_INTERP_FRAMES - 1);
+
+
 
     bulmaSlider.attach();
 
 
-    var slider = document.getElementById("interpolation-slider");
-
+    var slider_poster = document.getElementById("range-slider-poster");
     // Flag to control the automatic movement
     var autoMove = true;
     
     // Function to update slider value every 1 second
     var interval = setInterval(function() {
         if(autoMove) {
-            if(slider.value < 318) {
-                slider.value = parseInt(slider.value) + 1;
+            if(slider_poster.value < NUM_INTERP_FRAMES-1) {
+                slider_poster.value = parseInt(slider_poster.value) + 1;
             } else {
-                slider.value = 1; // reset to 1 when it reaches 100
+                slider_poster.value = 1; // reset to 1 when it reaches 100
             }
-    
+
             // Trigger input event for visual update
             if ("Event" in window) {
-                slider.dispatchEvent(new Event("input"));
+                slider_poster.dispatchEvent(new Event("input"));
+
             } else {
                 var evt = document.createEvent("Event");
                 evt.initEvent("input", true, true);
-                slider.dispatchEvent(evt);
+                slider_poster.dispatchEvent(evt);
             }
         }
     }, 10); // 1000 ms = 1 second
     
     // Stop automatic movement when the slider is clicked
-    slider.addEventListener("mousedown", function() {
+    slider_poster.addEventListener("mousedown", function() {
         autoMove = false;
-        $("#hand-pointer").css("display", "none")
     });    
 
-    slider.addEventListener("pointerdown", function() {
+    slider_poster.addEventListener("pointerdown", function() {
         autoMove = false;
-        $("#hand-pointer").css("display", "none")
-    });    
+    });
+    
 
-    $('#pointslow')[0].playbackRate = 0.7;
+
 
 
     // bibtex copy
@@ -163,7 +153,7 @@ $(document).ready(function() {
         }, 700);
     }    
 
-})
+});
 
 
 
