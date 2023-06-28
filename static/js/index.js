@@ -91,7 +91,7 @@ $(document).ready(function() {
     var slider = document.getElementById("interpolation-slider");
 
     // Flag to control the automatic movement
-    var autoMove = false;
+    var autoMove = true;
     
     // Function to update slider value every 1 second
     var interval = setInterval(function() {
