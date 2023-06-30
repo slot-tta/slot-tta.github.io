@@ -6,9 +6,9 @@ var INTERP_EX4 = "./static/slot_tta_gifs/ex4_frames";
 var INTERP_EX5 = "./static/slot_tta_gifs/ex5_frames";
 var INTERP_EX6 = "./static/slot_tta_gifs/ex6_frames";
 var INTERP_EX7 = "./static/slot_tta_gifs/ex7_frames";
-var INTERP_EX3 = "./static/slot_tta_gifs/ex3_frames";
-var NUM_INTERP_FRAMES = 264;
-var NUM_INTERP_FRAMES_PC = 130;
+var INTERP_EX3 = "./static/slot_tta_gifs/ex3_frames_sub";
+var NUM_INTERP_FRAMES = 20;
+// var NUM_INTERP_FRAMES_PC = 130;
 
 var interp_images_ex1 = [];
 var interp_images_ex2 = [];
@@ -113,7 +113,7 @@ $(document).ready(function() {
                 slider_poster.dispatchEvent(evt);
             }
         }
-    }, 10); // 1000 ms = 1 second
+    }, 200); // 1000 ms = 1 second
     
     // Stop automatic movement when the slider is clicked
     slider_poster.addEventListener("mousedown", function() {
