@@ -85,13 +85,13 @@
             <span class="author-block">
               <a href="https://research.google/people/107637/">Sujoy Paul</a><sup>3</sup>,</span>
             <span class="author-block">
-              <a href="https://www.sjoerdvansteenkiste.com/">Sjoerd van Steenkiste</a><sup>3</sup>,</span>
+              <a href="https://www.sjoerdvansteenkiste.com/">Sjoerd van Steenkiste</a><sup>2</sup>,</span>
             <span class="author-block">
-              <a href="https://msajjadi.com/">Mehdi S. M. Sajjadi</a><sup>3</sup>,</span>
+              <a href="https://msajjadi.com/">Mehdi S. M. Sajjadi</a><sup>2</sup>,</span>
             <span class="author-block">
               <a href="https://research.google/people/GauravAggarwal/">Gaurav Aggarwal</a><sup>3</sup>,</span>
             <span class="author-block">
-              <a href="https://tkipf.github.io/">Thomas Kipf</a><sup>3</sup>,</span>
+              <a href="https://tkipf.github.io/">Thomas Kipf</a><sup>2</sup>,</span>
             <span class="author-block">
               <a href="https://www.cs.cmu.edu/~dpathak/">Deepak Pathak</a><sup>1</sup>,</span>
             <span class="author-block">
@@ -100,7 +100,7 @@
 
           <div class="is-size-5 publication-authors">
             <span class="author-block"><sup>1</sup>Carnegie Mellon University,</span>
-            <span class="author-block"><sup>2</sup>DeepMind,</span>
+            <span class="author-block"><sup>2</sup>Google DeepMind,</span>
             <span class="author-block"><sup>3</sup>Google Research</span>
           </div>
           <div class="is-size-5 pt-2 pb-2 has-text-centered publication-venue">
@@ -266,12 +266,9 @@
   <div class="container is-max-widescreen">
     <div class="columns is-centered">
       <div class="column is-full-width">
-
-
-
         <h2 class="title is-3 has-text-centered">Decomposing 3D point clouds</h2>
         <p>
-          We visualize point cloud reconstruction and segmentation during test-time adaptation steps. As can be seen, segmentation improves when optimizing over reconstruction objective via gradient descent at test-time on a single test sample.
+          We visualize point cloud reconstruction and segmentation during test-time adaptation steps. As can be seen, segmentation improves when optimizing over reconstruction objective via gradient descent at test-time on a single test sample. We train supervised using some categories of PartNet and test using novel-categories.
         </p>    
         <div class="columns mt-4">
           <div class="column"> 
@@ -290,11 +287,83 @@
           </div> 
 
       </div>   
+    </div>
+  </div>
+</div>
+</section>
 
+
+
+<section class="hero is-small">  
+  <div class="hero-body pt-0">
+    
+    <div class="container">
+      
+      <h2 class="subtitle has-text-centered mb-0 pb-0">Some More Examples. </h2>
+      <div id="results-carousel" class="carousel results-carousel">
+        
+        <div class="item item-steve">
+          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos//pc/ex1.m4v"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/pc/ex2.m4v"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-shiba">
+          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/pc/ex3.m4v"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-fullbody">
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/pc/ex4.m4v"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-blueshirt">
+          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos//pc/ex5.m4v"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-mask">
+          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos//pc/ex6.m4v"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-blueshirt">
+          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos//pc/ex7.m4v"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-mask">
+          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos//pc/ex8.m4v"
+                    type="video/mp4">
+          </video>
+        </div>        
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-widescreen">
+    <div class="columns is-centered">
+      <div class="column is-full-width">      
         <h2 class="title pt-5 has-text-centered">Decomposing RGB images in multi-view scenes</h2>
         <div  class="content has-text-justified">
           <p>
-            We visualize RGB reconstruction and segmentation during test-time adaptation steps. As can be seen, segmentation of the target viewpoint improves when optimizing over view synthesis objective via gradient descent at test-time on a single test scene. </p>
+            We visualize RGB reconstruction and segmentation during test-time adaptation steps. As can be seen, segmentation of the target viewpoint improves when optimizing over view synthesis objective via gradient descent at test-time on a single test scene. We train supervised using Kubric's MSN-Easy and test using MSN-Hard. </p>
             <div class="columns mt-4">
               <div class="column"> 
                 <div  id="interpolation-ex4-wrapper">
@@ -375,7 +444,7 @@
       <div class="column is-full-width">
         <h2 class="title is-3 has-text-centered">Decomposing 2D RGB images</h2>
         <p>
-          We visualize RGB reconstruction during test-time adaptation steps. As can be seen, segmentation improves when optimizing over reconstruction objective via gradient descent at test-time on a single test sample.
+          We visualize RGB reconstruction during test-time adaptation steps. As can be seen, segmentation improves when optimizing over reconstruction objective via gradient descent at test-time on a single test sample. We train supervised using the CLEVR dataset and test using CLEVR-TEX.
         </p>    
         <div class="columns mt-4">
           <div class="column"> 
