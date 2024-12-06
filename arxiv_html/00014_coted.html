@@ -1,0 +1,188 @@
+<!doctype html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" media="all" href="normalize.css">
+        <link rel="stylesheet" media="all" href="core.css">
+        <link rel="stylesheet" media="all" href="style.css">
+        <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
+    
+        <script type="text/javascript">
+          MathJax.Hub.Config({
+            tex2jax: {
+              inlineMath: [['$', '$'], ['\(', '\)']],
+              displayMath: [['$$', '$$'], ['\[', '\]']],
+              processEscapes: true
+            }
+          });
+        </script>
+        
+</head>
+    <body>
+    <h1>SESAMEBERT: ATTENTION FOR ANYWHERE</h1>
+<p>Anonymous authors Paper under double-blind review  </p>
+<h1>ABSTRACT</h1>
+<p>Fine-tuning with pre-trained models has achieved exceptional results for many language tasks. In this study, we focused on one such self-attention network model, namely BERT, which has performed well in terms of stacking layers across diverse language-understanding benchmarks. However, in many downstream tasks, information between layers is ignored by BERT for fine-tuning. In addition, although self-attention networks are well-known for their ability to capture global dependencies, room for improvement remains in terms of emphasizing the importance of local contexts. In light of these advantages and disadvantages, this paper proposes SesameBERT, a generalized fine-tuning method that (1) enables the extraction of global information among all layers through Squeeze and Excitation and (2) enriches local information by capturing neighboring contexts via Gaussian blurring. Furthermore, we demonstrated the effectiveness of our approach in the HANS dataset, which is used to determine whether models have adopted shallow heuristics instead of learning underlying generalizations. The experiments revealed that SesameBERT outperformed BERT with respect to GLUE benchmark and the HANS evaluation set.  </p>
+<h1>1 INTRODUCTION</h1>
+<p>In recent years, unsupervised pretrained models have dominated the field of natural language processing (NLP). The construction of a framework for such a model involves two steps: pretraining and fine-tuning. During pretraining, an encoder neural network model is trained using large-scale unlabeled data to learn word embeddings; parameters are then fine-tuned with labeled data related to downstream tasks.  </p>
+<p>Traditionally, word embeddings are vector representations learned from large quantities of unstructured textual data such as those from Wikipedia corpora (Mikolov et al., 2013). Each word is represented by an independent vector, even though many words are morphologically similar. To solve this problem, techniques for contextualized word representation (Peters et al., 2018; Devlin et al., 2019) have been developed; some have proven to be more effective than conventional word-embedding techniques, which extract only local semantic information of individual words. By contrast, pretrained contextual representations learn sentence-level information from sentence encoders and can generate multiple word embeddings for a word. Pretraining methods related to contextualized word representation, such as BERT (Devlin et al., 2019), OpenAI GPT (Radford et al., 2018), and ELMo (Peters et al., 2018), have attracted considerable attention in the field of NLP and have achieved high accuracy in GLUE tasks such as single-sentence, similarity and paraphrasing, and inference tasks (Wang et al., 2019). Among the aforementioned pretraining methods, BERT, a state-of-the-art network, is the leading method that applies the architecture of the Transformer encoder, which outperforms other models with respect to the GLUE benchmark. BERT's performance suggests that self-attention is highly effective in extracting the latent meanings of sentence embeddings.  </p>
+<p>This study aimed to improve contextualized word embeddings, which constitute the output of encoder layers to be fed into a classifier. We used the original method of the pretraining stage in the BERT model. During the fine-tuning process, we introduced a new architecture known as Squeeze and Excitation alongside Gaussian blurring with symmetrically SAME padding ("SESAME" hereafter). First, although the developer of the BERT model initially presented several options for its use, whether the selective layer approaches involved information contained in all layers was unclear. In a previous study, by investigating relationships between layers, we observed that the Squeeze and Excitation method (Hu et al., 2018) is key for focusing on information between layer weights. This method enables the network to perform feature recalibration and improves the quality of representations by selectively emphasizing informative features and suppressing redundant ones. Second, the self-attention mechanism enables a word to analyze other words in an input sequence; this process can lead to more accurate encoding. The main benefit of the self-attention mechanism method is its high ability to capture global dependencies. Therefore, this paper proposes the strategy, namely Gaussian blurring, to focus on local contexts. We created a Gaussian matrix and performed convolution alongside a fixed window size for sentence embedding. Convolution helps a word to focus on not only its own importance but also its relationships with neighboring words. Through such focus, each word in a sentence can simultaneously maintain global and local dependencies.  </p>
+<p>We conducted experiments with our proposed method to determine whether the trained model could outperform the BERT model. We observed that SesameBERT yielded marked improvement across most GLUE tasks. In addition, we adopted a new evaluation set called HANS (McCoy et al., 2019), which was designed to diagnose the use of fallible structural heuristics, namely the lexical overlap heuristic, subsequent heuristic, and constituent heuristic. Models that apply these heuristics are guaranteed to fail in the HANS dataset. For example, although BERT scores highly in the given test set, it performs poorly in the HANS dataset; BERT may label an example correctly not based on reasoning regarding the meanings of sentences but rather by assuming that the premise entails any hypothesis whose words all appear in the premise (Dasgupta et al., 2018). By contrast, SesameBERT performs well in the HANS dataset; this implies that this model does not merely rely on heuristics. In summary, our final model proved to be competitive on multiple downstream tasks.  </p>
+<h1>2 RELATED WORK</h1>
+<h1>2.1  UNSUPERVISED PRETRAINING IN NLP</h1>
+<p>Most related studies have used pretrained word vectors (Mikolov et al., 2013; Pennington et al., 2014) as the primary components of NLP architectures. This is problematic because word vectors capture semantics only from a word's surrounding text. Therefore, a vector has the same embedding for the same word in different contexts, even though the word's meaning may be different.  </p>
+<p>Pretrained contextualized word representations overcome the shortcomings of word vectors by capturing the meanings of words with respect to context. ELMo (Peters et al., 2018) can extract contextsensitive representations from a language model by using hidden states in stacked LSTMs. Generative pretraining (Radford et al., 2018) uses the "Transformer encoder’ rather than LSTMs to acquire textual representations for NLP downstream tasks; however, one limitation of this model is that it is trained to predict future left-to-right contexts of a unidirectional nature. BERT (Devlin et al., 2019) involves a masked language modeling task and achieves high performance on multiple natural language-understanding tasks. In BERT architecture, however, because the output data of different layers encode a wide variety of information, the most appropriate pooling strategy depends on the case. Therefore, layer selection is a challenge in learning how to apply the aforementioned models.  </p>
+<h1>2.2 SQUEEZE AND EXCITATION</h1>
+<p>The Squeeze and Excitation method was introduced by Hu et al. (2018), who aimed to enhance the quality of representations produced by a network. Convolutional neural networks traditionally use convolutional filters to extract informative features from images. Such extraction is achieved by fusing the spatial and channel-wise information of the image in question. However, the channels of such networks’ convolutional features have no interdependencies with one another. The network weighs each of its channels equally during the creation of output feature maps. Through Squeeze and Excitation, a network can take advantage of feature recalibration and use global information to emphasize informative features and suppress less important ones.  </p>
+<h1>2.3 LOCALNESS MODELING</h1>
+<p>The self-attention network relies on an attention mechanism to capture global dependencies without considering their distances by calculating all the positions in an input sequence. Our Gaussianblurring method focuses on learning local contexts while maintaining a high ability to capture longrange dependencies. Localness modeling was considered a learnable form of Gaussian bias ( Yang et al., 2019) in which a central position and dynamic window are predicted alongside intermediate representations in a neural network. However, instead of using Gaussian bias to mask the logit similarity of a word, we performed Gaussian bias in the layer after the embedding layer to demonstrate that performing element-wise operations in this layer can improve the model performance.  </p>
+<h1>2.4  DIAGNOSING SYNTACTIC HEURISTICS</h1>
+<p>A recent study (McCoy et al., 2019) investigated whether neural network architectures are prone to adopting shallow heuristics to achieve success in training examples rather than learning the underlying generalizations that need to be captured. For example, in computer vision, neural networks trained to recognize objects are misled by contextual heuristics in cases of monkey recognition (Wang et al., 2017). For example, in the field of natural language inference (NLI), a model may predict a label that contradicts the input because the word "'not'", which often appears in examples of contradiction in standard NLI training sets, is present (Naik et al., 2018; Carmona et al., 2018). In the present study, we aimed to make SesameBERT robust with respect to all training sets. Consequently, our experiments used HANS datasets to diagnose some fallible structural heuristics presented in this paper (McCoy et al., 2019).  </p>
+<h1>3 METHODS</h1>
+<p>We focused on BERT, which is the encoder architecture of a multilayer Transformer (Vaswani et al., 2017), featuring some improvements. The encoder consists of $\mathrm{L}$ encoder layers, each containing two sublayers, namely a multihead self-attention layer and a feed-forward network. The multihead mechanism runs through a scaled dot product attention function, which can be formulated by querying a dictionary entry with key value pairs (Miller et al., 2016). The self-attention input consists of a query $Q\,\in\,\dot{\mathbb{R}}^{l\times d}$ , a key $\pmb{K}\in\mathbb{R}^{l\times\pmb{d}}$ , and a value $V\,\in\,\mathbb{R}^{l\times d}$ , where $l$ is the length of the input sentence, and $d$ is the dimension of embedding for query, key and value. For subsequent layers, $Q$ $\kappa$ ， $V$ comes from the output of the previous layer. The scaled dot product attention ( Vaswani et al., 2017) is defined as follows:  </p>
+<p>$$
+A t t e n t i o n(Q,K,V)=s o f t m a x(\frac{Q K^{T}}{\sqrt{d}})\cdot V
+$$  </p>
+<p>The output represents the multiplication of the attention weights $\pmb{A}$ and the  vector $\pmb{v}$ ，where $\begin{array}{r}{A=\mathit{s o f t m a x}(\frac{Q{K}^{T}}{\sqrt{d}})\in\mathbb{R}^{l\times l}}\end{array}$ e(SK ) IRx1 Theatenion weights Ai, eabledu to eter understand about the importance of the $i$ -th key-value pairs with respect to the $j$ -th query in generating the output (Bahdanau et al., 2015). During fine-tuning, We used the output encoder layer from the pretrained BERT model to create contextualized word embeddings and feed these embeddings into the model. Although several methods have been developed for extracting contextualized embeddings from various layers, we believed that these methods had substantial room for improvement. Therefore, we used Squeeze and Excitation to solve the aforementioned problem.  </p>
+<h1>3.1SQUEEZE AND EXCITATION</h1>
+<p>In this study, we proposed the application of Squeeze and Excitation (Hu et al., 2018); its application to the output of the encoder layer was straightforward once we realized that the number of channels was equivalent to the number of layers. Therefore, we intended to use the term channels and layers interchangeably.  </p>
+<p>First, we defined $\mathbf{U}_{:,:,k}$ as the output of the $k$ -th encoder layer, for all $1\,\leq\,k\,\leq\,n$ . We wanted to acquire global information from between the layers before feeding the input into the classifier; therefore, we concatenated all the output from each encoder layer to form the feature maps $\mathbf{U}\in$ $\mathbb{R}^{l\times d\times n}$ In the squeeze step,by using global average pooling on the th layer, we were able to squeeze the global spatial information into a layer descriptor. In other words, we set the $k$ th layer's output of the squeeze function as ${\sf Z}_{:,:,k}$  </p>
+<p><span style="color:blue"></p>
+<p>Completions Start:</p>
+<p>COT: To derive the equation for the squeeze function, we first considered the need to extract global information from the concatenated output of all encoder layers. This output is represented by the feature maps $\mathbf{U} \in \mathbb{R}^{l \times d \times n}$, where $l$ is the length of the input sentence, $d$ is the dimension of embedding, and $n$ is the number of encoder layers. We then proposed using global average pooling to squeeze the global spatial information into a layer descriptor, which led us to define the squeeze function as $f_{sq}(\mathbf{U}_k)$., 
+ before perplexity: 1.1530131662120766, after perplexity: 1.1121986213961463</p>
+<p>Completions End </p>
+<p></span>$$
+\pmb{\mathrm{Z}}_{:,:,k}=f_{s q}(\mathbf{U}_{k})=\frac{1}{l\times d}\sum_{i=1}^{l}\sum_{j=1}^{d}U_{i,j,k}
+$$  </p>
+<p><img alt="" src="images/ccdb766841e59a92ffbdb762d0e916659e3f9d8c891008f8f38ee251c7a8cdbe.jpg" /><br />
+Figure 1: We extracted the output from each layer of the encoders and concatenated all the layers to form a three-dimensional tensor U. We then performed Squeeze $f_{s q}(\mathbf{U})$ and Excitation $f_{e x}(f_{s q}(\mathbf{U}))$ to obtain the weight of each output layer. Finally, we fed the weighted average of all layers into the classifier. In this work we employed $n=12$ attentionlayers.  </p>
+<p>In the excitation step, we aimed to fully capture layer-wise dependencies. This method uses the layer-wise output of the squeeze operation $f_{s q}$ to modulate interdependencies of all layers. Excitation is a gating mechanism with a sigmoid activation function that contains two fully connected layers. Let $W_{1}$ and $W_{2}$ be the weights of the first and second fully connected layers, respectively, and let $r$ be the bottleneck in the layer excitation that encodes the layer-wise dependencies; therefore, $W_{1}\in\mathbb{R}^{n\times\frac{n}{r}}$ , and $W_{2}\in\mathbb{R}^{\frac{n}{r}\times n}$ The excitation function $f_{e x}$  </p>
+<p><span style="color:blue"></p>
+<p>Completions Start:</p>
+<p>COT: We aimed to develop a gating mechanism to fully capture layer-wise dependencies, and thus, we employed a sigmoid activation function in the excitation step. This involved using two fully connected layers with weights $W_1$ and $W_2$, and a bottleneck $r$ to encode the layer-wise dependencies. We then defined the excitation function $f_{ex}$ as the composition of a ReLU activation function and the two fully connected layers, which can be expressed as $\sigma(R e L U(\pmb{z},W_{1}),W_{2})$., 
+ before perplexity: 1.8098468982743725, after perplexity: 1.247769805097778</p>
+<p>Completions End </p>
+<p></span>$$
+\pmb{s}=f_{e x}(\pmb{z})=\sigma(R e L U(\pmb{z},W_{1}),W_{2})
+$$  </p>
+<p>where $_{z}$ is the vector squeezed from tensor Z.  </p>
+<p>Finally, we rescaled the output ${\sf Z}_{:,:,k}$ by multiplying it by $s_{k}$ . The rescaled output is deonted as $\widetilde{\pmb{u}}_{k}$ The scaling function $f_{s c a l e}$ is defined as follows:  </p>
+<p><span style="color:blue"></p>
+<p>Completions Start:</p>
+<p>COT: We aimed to rescale the output of each layer by multiplying it with the corresponding scaling factor obtained from the excitation step. To achieve this, we defined a scaling function $f_{s c a l e}$ that takes the output of the $k$-th layer $\mathbf{u}_{:,:,k}$ and the scaling factor $s_k$ as inputs. By multiplying the two, we obtained the rescaled output $\widetilde{\mathbf{u}}_k$, which effectively captures the layer-wise dependencies and global information., 
+ before perplexity: 1.6694387749758197, after perplexity: 1.652402207421303</p>
+<p>Completions End </p>
+<p></span>$$
+\widetilde{\pmb u}_{k}=f_{s c a l e}(\pmb{s}_{k},\pmb{\mathsf u}_{:,:,k})
+$$  </p>
+<p>We concatenated all rescaled outputs from all encoder layers to form our rescaled feature maps $\widetilde{\pmb{u}}$ The architecture is shown in Figure 1. We then extracted layers from the rescaled feature maps, or calculated aweighted average layer $\widetilde{\pmb{u}}_{a v g}$  </p>
+<p><span style="color:blue"></p>
+<p>Completions Start:</p>
+<p>COT: To derive the equation for the weighted average layer, we first concatenated all rescaled outputs from all encoder layers to form our rescaled feature maps $\widetilde{\mathbf{u}}$. We then extracted layers from the rescaled feature maps, or calculated a weighted average layer by taking a weighted sum of the rescaled outputs from each encoder layer. The weights are determined by the layer-wise dependencies encoded in the excitation function, which we denoted as $s_k$., 
+ before perplexity: 0.8809155799268689, after perplexity: 0.8670821188776489</p>
+<p>Completions End </p>
+<p></span>$$
+\widetilde{\mathbf{u}}_{a v g}=\frac{\sum_{k=1}^{n}f_{s c a l e}(s_{k},\mathbf{U}_{:,:,k})}{\sum_{k=1}^{n}s_{k}}
+$$  </p>
+<p>3.2 GAUSSIAN BLURRING  </p>
+<p>Given an input sequence $X={x_{1},x_{2},...,x_{l}}_{.}\in\mathbb{R}^{l\times d}$ , the model transformed it into queries $Q$ ,keys $\kappa$ , and values $V$ where $Q,K$ , and $V\in\dot{\mathbb{R}}^{l\times d}$ . Multihead attention enabled the model to jointly attend to information from different representation subspaces at different positions. Thus, the three types of representations are split into $_\mathrm{h}$ subspaces of size $\frac{d}{h}$ to attend to different information. For example, $Q\,=\,(Q^{1},Q^{2},...,Q^{h})$ with $Q^{i}\;\in\;\mathbb{R}^{l\times\frac{d}{h}}$ for all $1\,\leq\,i\,\leq\,h$ : In each subspace $_\mathrm{h}$ the element $o_{i}^{h}$ in the output sequence $O^{h}={\bigl(}o_{1}^{h},o_{2}^{h},...,o_{l}^{h}{\bigr)}$ is computed as follows:  </p>
+<p>$$
+o_{i}^{h}=A t t e n t i o n(q_{i}^{h},K^{h})V^{h}
+$$  </p>
+<p>Wwhere $o_{i}^{h}\in\mathbb{R}^{\frac{d}{h}}$  </p>
+<p>To capture the local dependency related to each word, we first used a predefined fixed window size $k$ to create a Gaussian blur $g$ ,where $g\in\mathbb{R}^{k}$  </p>
+<p>$$
+g(\mathrm{x};\sigma,k)=e x p(\frac{-(\mathrm{x}-\lfloor\frac{k}{2}\rfloor)^{2}}{2\sigma^{2}})
+$$  </p>
+<p>where $\sigma$ refers to the standard deviation. Several Gaussian-blurring strategies are feasible for apply ing convolutional operations to attention outputs.  </p>
+<p><img alt="" src="images/81905cab80f52b8a507b224edc87e93aa902e83e54fb46937389b38a575d453e.jpg" /><br />
+3.2.1 GAUSSIAN BLURRING ON ATTENTION OUTPUTS  </p>
+<p>Figure 2: Diagram of a one-dimensional Gaussian blur kernel, which was convoluted through the input dimension. This approach enabled the central word to acquire information concerning neighboring words with weights proportional to the Gaussian distribution.  </p>
+<p>The first strategy focuses on each attentionoutut $O^{h}$ . We restrict ${\hat{O}}_{i,j}^{h},$ : to a local scope with a fixed size $k$ centered at the position $i$ and dimension $j$ , where $1\leq j\leq d$ , and $\boldsymbol{\mathrm{k}}$ can be any odd number between 1 and $l$ , expressed as follows:  </p>
+<p>$$
+\hat{O}_{i,j,:}^{h}=[O_{i-\lfloor\frac{k}{2}\rfloor,j}^{h},...,O_{i,j}^{h}...,O_{i+\lfloor\frac{k}{2}\rfloor,j}^{h}]
+$$  </p>
+<p>We then enhance the localness of $\hat{O}_{i,j,}^{h}$ : through a parameter-free $1D$ convolution operation with $g$  </p>
+<p>$$
+\widetilde{O}_{i,j}^{h}=\hat{O}_{i,j,:}^{h}\cdot g
+$$  </p>
+<p>The final attention output is $\widetilde{O}^{h}$ , which is the dot product between the Gaussian kernel and the coresponding input aray elemensat everypston of $\hat{O}_{i,j,:}^{h}$  </p>
+<p>$$
+\widetilde{\cal O}^{h}={\cal O}^{h}\ast g
+$$  </p>
+<p>where $^*$ is defined as a convolution operation, as illustrated in Figure 2.  </p>
+<p>More specifically, $\widetilde{O}_{i,j}^{h}$ , the entry of $\widetilde O^{h}$ in the $i$ -th row and $j$ -th column, equals $b l u r(O_{i,j}^{h})$  </p>
+<p>$$
+\begin{array}{l}{\displaystyle\widetilde{O}_{i j}^{h}=b l u r(O_{i,j}^{h})}\ {\displaystyle\qquad=\sum_{\scriptscriptstyle\mathrm{x}\in[-k,k]}g(\mathrm{x};\sigma,k)O_{i+\mathrm{x},j}}\ {\displaystyle\qquad=\sum_{\scriptscriptstyle\mathrm{x}\in[-k,k]}g(\mathrm{x};\sigma,k)\sum_{l}A_{i+\mathrm{x},l}V_{l,j}}\end{array}
+$$  </p>
+<h1>3.2.2 GAUSSIAN BLURRING ON VALUES</h1>
+<p>Another option focuses on values V. We applied the aforementioned method again but restrict $V^{h}$ to a local scope. The final attention output $\widetilde O^{h}$ is denoted as follows:  </p>
+<p>$$
+\widetilde{O}^{h}=A t t e n t i o n({\cal Q}^{h},K^{h})(V^{h}*g)
+$$  </p>
+<p>The difference between the present method and the method of performing Gaussian blurring on attention outputs and values is that the method of performing Gaussian blurring on attention outputs and values places greater emphasis on the interaction of cross-query vectors, whereas the present method focuses on cross-value vectors. Finally, the outputs of the $_\mathrm{h}$ attention heads are concatenated to form the final output representation O:  </p>
+<p>$$
+\tilde{O}=(\tilde{O}^{1},\tilde{O}^{2},...,\tilde{O}^{h})
+$$  </p>
+<p>Where $\widetilde{O}\in\mathbb{R}^{l\times d}$ . The multihead mechanism enables each head to capture distinct linguistic input properties (Li et al., 2019). Furthermore, because our model is based on BERT, which builds an encoder framework with a stack of 12 layers, we were able to apply locality modeling to all layers through Squeeze and Excitation. Therefore, we expected that the global information and local properties captured by all layers could be exploited.  </p>
+<h1>4 EXPERIMENTS</h1>
+<p>We evaluated the proposed SesameBERT model by conducting multiple classification tasks. For comparison with the results of a previous study on BERT (Devlin et al., 2019), we reimplemented the BERT model in TensorFlow in our experiments. 1 In addition, we set most of the parameters to be identical to those in the original BERT model, namely, batch size: 16, 32, learning rate: 5e-5, 3e-5, 2e-5, and number of epochs: 3, 4. All of the results in this paper can be replicated in no more than 12 hours by a graphics processing unit with nine GLUE datasets. We trained all of the models in the same computation environment with an NVIDIA Tesla V100 graphics processing unit.  </p>
+<h1>4.1 GLUE DATASETS</h1>
+<p>GLUE benchmark is a collection of nine natural language-understanding tasks, including questionanswering, sentiment analysis, identification of textual similarities, and recognition of textual entailment (Wang et al., 2019). GLUE datasets were employed because they are sets of tools used to evaluate the performance of models for a diverse set of existing NLU tasks. The datasets and metrics used for the experiments in this study are detailed in the appendix A.  </p>
+<h1>4.2 HANS DATASET</h1>
+<p>We used a new evaluation set, namely the HANS dataset, to diagnose fallible structural heuristics presented in a previous study (McCoy et al., 2019) based on syntactic properties. More specifically, models might apply accurate labels not based on reasoning regarding the meanings of words but rather by assuming that the premise entails any hypothesis whose words all appear in the premise (Dasgupta et al., 2018; Naik et al., 2018). Furthermore, an instance that contradicts the lexical overlap heuristics in MNLI is likely too rare to prevent a model from learning heuristics. Models may learn to assume that a label is contradictory whenever a negation word is contained in the premise but not the hypothesis (McCoy &amp; Linzen, 2019). Therefore, whether a model scored well on a given test set because it relied on heuristics can be observed. For example, BERT performed well on MNLI tasks but poorly on the HANS dataset; this finding suggested that the BERT model employs the aforementioned heuristics.  </p>
+<p>The main difference between the MNLI and HANS datasets is their numbers of labels. The MNLI dataset has three labels, namely Entailment, Neutral, and Contradiction. In the HANS dataset, instances labeled as Contradiction or Neutral are translated into non-entailment. Therefore, this dataset has only two labels: Entailment and Non-entailment. The HANS dataset targets three heuristics, namely Lexical overlap, Subsequence, and Constituent, with more details in appendix B. This dataset not only serves as a tool for measuring progress in this field but also enables the visualization of interpretable shortcomings in models trained using MNLI.  </p>
+<h1>4.3 RESULTS</h1>
+<h1>4.3.1 GLUE DATASETS RESULTS</h1>
+<p>This subsection provides the experiment results of the baseline model and the models trained using our proposed method. We performed Gaussian blurring on attention outputs in the experiment. In addition, we employed a batch size of 32, learning rates of 3e-5, and 3 epochs over the data for all GLUE tasks. We fine-tuned the SesameBERT model through 9 downstream tasks in the datasets. For each task, we performed fine-tuning alongside Gaussian blur kernel sigmas 1e-2, 1e-1, 3e-1, and 5e-1 and selected that with the most favorable performance in the dev set. Because GLUE datasets do not distribute labels for test sets, we uploaded our predictions to the GLUE server for evaluation. The results are presented in Table 1; GLUE benchmark is provided for reference. In most tasks, our proposed method outperformed the original BERT-Base model (Devlin et al., 2019). For example, in the RTE and AX datasets, SesameBERT yielded improvements of $1.2\%$ and $1.6\%$ ,respectively.We conducted experiments on GLUE datasets to test the effects of Gaussian blurring alongside BERT on the value layer and context layer. Table 2 shows the degrees of accuracy in the dev set. The performance of Gaussian blurring with respect to self-attention layers varied among cases.  </p>
+<p>Table 1: Test results in relation to the GLUE benchmark. The metrics for these tasks, shown in appendix A, were calculated using a GLUE score. We compared our SesameBERT model with the original BERT-Base model, ELMo (Peters et al., 2018) and OpenAI GPT (Radford et al., 2018). All results were obtained from https : / /gluebenchmark . com/leaderboard.  </p>
+<p><img alt="" src="images/4336c0d966aaa056559b6e75a75fdc64df74a652f20d29a0690e6a32ddbe726e.jpg" />  </p>
+<p>Table 2: Performance of Gaussian blurring alongside the BERT model. The results were tested on four GLUE datasets, with accuracy as the metric.   </p>
+<p><img alt="" src="images/6e0b93ec1a3ab943201df6eb2644e51773838dc96a5618786fbd40115836a3b3.jpg" />  </p>
+<p>Gong et al. (2019) demonstrated that different layers vary in terms of their abilities to distinguish and capture neighboring positions and global dependency between words. We evaluated the weights learned from all layers. These weights indicated that a heavier weight represents greater importance. The results are shown in appendix C. Because the lower layer represents word embeddings that are deficient in terms of context (Baosong Yang, 2018), the self-attention model in the lower layer may need to encode representations with global context and may struggle to learn localness. Table 3 shows the degree of accuracy predicted by each extracted attention output layer method. The results indicated that the lower layers had lower accuracy.  </p>
+<p>We performed three ablation studies. First, we examined the performance of our method without blurring; we observed that Squeeze and Excitation helped the higher layer. This trend suggested that higher layers benefit more than do lower layers from Squeeze and Excitation. Second, we analyzed the effect of Gaussian blurring on the context layer. The results revealed that the method with blurring achieved higher accuracy in lower layers. We assumed that capturing short-range dependencies among neighboring words in lower layers is an effective strategy. Even if self-attention models capture long-range dependencies beyond phrase boundaries in higher layers, modeling localness remains a helpful metric. Finally, we observed the direct effects of SesameBERT. Although our proposed architecture performed poorly in lower layers, it outperformed the other methods in higher layers. This finding indicated that in higher layers, using Squeeze and Excitation alongside Gaussian blurring helps self-attention models to capture global information in all layers.  </p>
+<h1>4.3.2 HANS DATASET RESULTS</h1>
+<p>We trained both BERT and SesameBERT on the MNLI-m dataset to evaluate their classification accuracy. Similar to the results of another study (Devlin et al., 2019), BERT achieved $84.6\%$ accuracy, which is higher than that of SesameBERT, as shown in Table 1. In the HANS dataset, we explored the effects of two models on each type of heuristic. The results are presented in Figure 3; we first examined heuristics for which the label was Entailment. We can see that both models performed well; they assigned the correct labels almost $100\%$ of the time, as we had expected them to do after adopting the heuristics targeted by HANS.  </p>
+<p>Table 3: Comparison of specified layers among various approaches in the RTE dataset. We dissected our models into two methods. SE-BERT refers to BERT with Squeeze and Excitation; BLUR-BERT refers to BERT with Gaussian blurring.  </p>
+<p><img alt="" src="images/76890cd3d05b65f4fb17335e379c14990abfc73375b3197bd96aa72b44e8b387.jpg" />  </p>
+<p>Next, we evaluated the heuristics labeled as Non-entailment. BERT performed poorly for all three cases, meaning that BERT assigned correct labels based on heuristics instead of applying the correct rules of inference. By contrast, our proposed method performed almost three times as well as BERT in the case of "Lexical overlap'.  </p>
+<p><img alt="" src="images/28cdfd004ac3c82aa8bb4d94dd348ea559fd3495633a1f3bb7a40615b4c7cc82.jpg" /><br />
+Figure 3: We compared BERT and SesameBERT for each case. Left: Results of heuristics-entailed cases. Right: Results of heuristics labeled as Nonentailment. In contrast to the results in Left:, BERT performed poorly in all three cases in Right; this indicated that the model had adopted shallow heuristics rather than learning the latent information that it intended to capture.  </p>
+<p>This paper argues that capturing local contexts for self-attention networks with Gaussian blurring can prevent models from easily adopting heuristics. Although our models performed poorly in cases of "Subsequence” and "Constituent', both of these heuristics may be hierarchical cases of the lexical overlap heuristic, meaning that the performance of this hierarchy would not necessarily match the performance of our models (McCoy et al., 2019).  </p>
+<h1>5 CONCLUSION</h1>
+<p>This paper proposes a fine-tuning approach named SesameBERT based on the pretraining model BERT to improve the performance of self-attention networks. Specifically, we aimed to find highquality attention output layers and then extract information from aspects in all layers through Squeeze and Excitation. Additionally, we adopted Gaussian blurring to help capture local contexts. Experiments using GLUE datasets revealed that SesameBERT outperformed the BERT baseline model. The results also revealed the weight distributions of different layers and the effects of applying different Gaussian-blurring approaches when training the model. Finally, we used the HANS dataset to determine whether our models were learning what we wanted them to learn rather than using shallow heuristics. We highlighted the use of lexical overlap heuristics as an advantage over the BERT model. SesameBERT could be further applied to prevent models from easily adopting shallow heuristics.  </p>
+<h1>REFERENCES</h1>
+<p>Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua Bengio. Neural machine translation by jointly learning to align and translate. ICLR, 2015. <br />
+Derek F. Wong Fandong Meng Lidia S. Chao Tong Zhang Baosong Yang, Zhaopeng Tu. Modeling localness for self-attention networks. EMNLP, 2018. <br />
+V. Ivan Sanchez Carmona, Jeff Mitchell, and Sebastian Riedel. Behavior analysis of nli models: Uncovering the influence of three factors on robustness. NAACL, 2018. <br />
+Ishita Dasgupta, Demi Guo, Andreas Stuhlmuller, Samuel J. Gershman, and Noah D. Goodman. Evaluating compositionality in sentence embeddings. 2018. <br />
+Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. Bert: Pre-training of deep bidirectional transformers for language understanding. NAACL, 2019. <br />
+Linyuan Gong, Di He, Zhuohan Li, Tao Qin, Liwei Wang, and Tieyan Liu. Effcient training of bert by progressively stacking. ICML, 2019. <br />
+Jie Hu, Li Shen, Samuel Albanie, Gang Sun, and Enhua Wu. Squeeze-and-excitation networks. CVPR, 2018. <br />
+Jian Li, Baosong Yang, Zi-Yi Dou, Xing Wang, Michael R. Lyu, and Zhaopeng Tu. Information aggregation for multi-head attention with routing-by-agreement. NAACL, 2019. <br />
+R. Thomas McCoy and Tal Linzen. Non-entailed subsequences as a challenge for natural language inference. SCiL, 2019. <br />
+R. Thomas McCoy, Ellie Pavlick, and Tal Linzen. Right for the wrong reasons: Diagnosing syntactic heuristics in natural language inference. ACL, 2019. <br />
+Tomas Mikolov, Ilya Sutskever, Kai Chen, Greg Corrado, and Jeffrey Dean. Distributed representations of words and phrases and their compositionality. NIPS, 2013. <br />
+Alexander H. Miller, Adam Fisch, Jesse Dodge, Amir-Hossein Karimi, Antoine Bordes, and Jason Weston. Key-value memory networks for directly reading documents. 2016. <br />
+Aakanksha Naik, Abhilasha Ravichander, Norman Sadeh, Carolyn Rose, and Graham Neubig. Stress test evaluation for natural language inference. COLING, 2018. <br />
+Jeffrey Pennington, Richard Socher, and Christopher D. Manning. Glove: Global vectors for word representation. EMNLP, 2014. <br />
+Mathew E. Peters, Mark Neumann, Mohit Iyyer, Matt Gardner, Christopher Clark, Kenton Le, and Luke Zettlemoyer. Deep contextualized word representations. NAACL, 2018. <br />
+Alec Radford, Karthik Narasimhan, Tim Salimans, and Ilya Sutskever. Improving language understanding by generative pre-training. 2018. <br />
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, and Illia Polosukhin. Attention is all you need. NIPS, 2017. <br />
+Alex Wang, Amanpreet Singh, Julian Michael, Felix Hil, Omer Levy, and Samuel R. Bowman. Glue: A multi-task benchmark and analysis platform for natural language understanding. ICLR, 2019. <br />
+Jianyu Wang, Zhishuai Zhang, Cihang Xie, Yuyin Zhou, Vittal Premachandran, Jun Zhu, Lingxi Xie, and Alan Yuile. Visual concepts and compositional voting. Annals of Mathematical Sciences and Applications, 2017. <br />
+Baosong Yang, Longyue Wang, Derek Wong, Lidia S. Chao, and Zhaopeng Tu. Convolutional self-attention networks. NAACL, 2019.  </p>
+<h1>A DESCRIPTIONS OF GLUE DATASETS</h1>
+<p>Table 4: Descriptions of GLUE tasks. The second and third column denote the sizes of the corresponding corpora. All tasks are classification tasks, except for STS-B, which is a regression task.  </p>
+<p><img alt="" src="images/7f0d5db4872483a236ac2b959dcddd296be59438c0d22dfeea9850a9dd8ffe5b.jpg" />  </p>
+<h1>BDESCRIPTION OF HANS DATASET</h1>
+<p>Table 5: Three types of heuristics targeted by the HANS dataset. The examples show incorrect entailment predictions that would result from targeting these heuristics.   </p>
+<p><img alt="" src="images/2a7d289ab79ea75ee8e0f9656216dcfcdacdc3b5a9a08ba7aeebbc92681c8e00.jpg" />  </p>
+<h1>C LAYER WEIGHTS CALCULATED BY SQUEEZE AND EXCITATION</h1>
+<p><img alt="" src="images/84fed55087202fa822eac8835b7de9b1af17005eadabcac8107e5cb6a2b53c1e.jpg" /><br />
+Figure 4: Evaluation of the weights calculated by Squeeze and Excitation for all layers, with the RTE dataset as an example.  </p>
+    </body>
+    </html>
